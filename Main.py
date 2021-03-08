@@ -10,7 +10,7 @@ img = cv.imread('images/02_g.jpg')
 plt.imshow(img)
 
 
-def getSize(pic):
+def get_size(pic):
     width=pic.shape[0]
     height=pic.shape[1]
     return [pic,width,height]
