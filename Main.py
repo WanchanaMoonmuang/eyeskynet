@@ -131,7 +131,7 @@ def find_center (brgimg) :
     return maxLoc
 
 #Return array of Distance from center by use roi from image to calculate radius"distance"
-#Format of list : cen2left,cen2right,cen2top,cen2bot
+#Format of list : cen2left cen2right cen2top cen2bot
 
 #INPUT no_bv img
 def find_rad(brgimg):
@@ -141,50 +141,42 @@ def find_rad(brgimg):
     max_y,max_x = bi_roi.shape
     
     #Format is First left ,First right, First upper,First lower,
-    first_white = []
+    from_center_2black = []
     count = 0
     #fix y run x from 0 (left)
     #FIRST LEFT
-    for i in bi_roi[cen_y,:] :
-        if i == 255 :
-            first_white.append(tuple([count,cen_y]))
+    for i in bi_roi[cen_y,cen_x::-1] :
+        if i == 0 :
+            from_center_2black.append(count)
             count = 0
             break
         count+=1
-    
     #FIRST RIGHT
-    for i in bi_roi[cen_y,::-1] :
-        if i == 255 :
-            p_loc = max_x - count
-            first_white.append(tuple([p_loc,cen_y]))
+    for i in bi_roi[cen_y,cen_x:] :
+        if i == 0 :
+            from_center_2black.append(count)
+            count = 0
+            break
+        count+=1
+        
+    #FIRST TOP
+    for i in bi_roi[cen_y:,cen_x] :
+        if i == 0 :
+            from_center_2black.append(count)
+            count = 0
+            break
+        count+=1
+
+    
+    #FIRST BOT
+    for i in bi_roi[cen_y::-1,cen_x] :
+        if i == 0 :
+            from_center_2black.append(count)
             count = 0
             break
         count+=1
     
-    #FIRST Top
-    for i in bi_roi[::-1,cen_x] :
-        if i == 255 :
-            p_loc = max_y-count
-            first_white.append(tuple([cen_x,p_loc]))
-            count = 0
-            break
-        count+=1
-    
-    #FIRST Bottom
-    for i in bi_roi[:,cen_x] :
-        if i == 255 :
-            first_white.append(tuple([cen_x,count]))
-            count = 0
-            break
-        count+=1
-
-
-    cen2left = abs(first_white[0][0] - cen_x)
-    cen2right = abs(first_white[1][0] - cen_x)
-    cen2top = abs(first_white[2][1] - cen_y)
-    cen2bot = abs(first_white[3][1] - cen_y)
-
-    dis_from_cen = np.array([cen2left,cen2right,cen2top,cen2bot])
+    dis_from_cen = np.array(from_center_2black)
     
     return dis_from_cen
 
