@@ -21,6 +21,10 @@ from sklearn.metrics import auc
 from sklearn.metrics import roc_curve
 from sklearn.preprocessing import label_binarize
 from sklearn.multiclass import OneVsRestClassifier
+from sklearn.model_selection import cross_val_score
+import time
+
+
 
 #Data = [cdr,avg,mostb,mostg,mostr,bloodpx]
 F1 = 0 #CDR always use
@@ -41,7 +45,11 @@ df_shape = 'ovo' #ovo / ovr
 
 def main():
     
-
+    seconds = time.time()
+    local_time = time.ctime(seconds)
+    local_time = local_time[11:13]+local_time[14:16]+local_time[17:19]
+    Out_folder = DIR+"\Model"+local_time
+    
 
     print("Loading file {} at {}".format(FILENAME,DIR))
     os.chdir(DIR)
@@ -65,13 +73,18 @@ def main():
     print(fname[F4])
     print(fname[F5])
     print(fname[F6])
-
+    try :
+        os.mkdir(Out_folder)
+    except OSError :
+        print("Fail to create folder")
+    os.chdir(Out_folder)
     #Classifier declare #KNeighborsClassifier(n_neighbors=3)
-    classifier = SVC(kernel='linear',probability=True) #decision_function_shape = 'ovo'
+    clf = SVC(kernel='linear',probability=True) #decision_function_shape = 'ovo'
 
 
-    classifier = OneVsRestClassifier(classifier) #ovr or ovo
+    classifier = OneVsRestClassifier(clf) #ovr or ovo
 
+    
 
     for fold,(train_index, val_index) in enumerate(kf.split(X)) :
         
@@ -85,7 +98,7 @@ def main():
 
 
         classifier.fit(X_train,y_train)
-        score = classifier.score(X_test, y_test)
+        
 
         try :
             y_score = classifier.decision_function(X_test) #decision_fn
@@ -93,7 +106,7 @@ def main():
             plot_roc = False
 
         
-        print("{} Fold no. {} Score : {}".format(CLASSIFIER_NAME,fold,score))
+        print("{} Fold no. {} ".format(CLASSIFIER_NAME,fold))
 
         #Save model
         joblib.dump(classifier,CLASSIFIER_NAME+'_fold'+str(fold)+'.pkl')
@@ -118,17 +131,15 @@ def main():
         plt.ylim([0.0, 1.05])
         plt.xlabel('False Positive Rate')
         plt.ylabel('True Positive Rate')
-        plt.title('Receiver operating characteristic example')
+        plt.title('Receiver operating characteristic fold {}'.format(fold))
         plt.legend(loc="lower right")
 
         plt.savefig("roc_auc_fold"+str(fold)+".jpg")
 
-
+        area_under_curve = roc_auc[2]
+        print("Area Under Curve :",area_under_curve)
         
-        # ra1_score = roc_auc_score(y_test, preds,multi_class='ovr')
-        #ra2_score = roc_auc_score(y_test, probs,multi_class='ovo')
-        # print("ROC AUC SCORE (1 vs rest):", ra1_score)
-        #print("ROC AUC SCORE (1 vs 1):", ra2_score)
+        
         
         print("----------------------------------------------------------")
     
