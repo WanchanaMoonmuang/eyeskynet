@@ -37,8 +37,7 @@ F6 = 5
 TITLE = "Healthy - Glaucoma - Others"
 FILENAME = 'HGO_ds.csv' #.csv
 DIR = 'D:\Downloads\eyeskynet\Output'
-CLASSIFIER_NAME = 'Knn5'  #'SVMLinear'
-df_shape = 'ovo' #ovo / ovr
+CLASSIFIER_NAME = 'Knn7'  #'SVMLinear'
 
 
 
@@ -80,7 +79,7 @@ def main():
         print("Fail to create folder")
     os.chdir(Out_folder)
     #Classifier declare #KNeighborsClassifier(n_neighbors=3)
-    clf = KNeighborsClassifier(n_neighbors=5)#SVC(kernel='linear',probability=True) #decision_function_shape = 'ovo'
+    clf = KNeighborsClassifier(n_neighbors=7)#SVC(kernel='linear',probability=True) #decision_function_shape = 'ovo'
 
 
     classifier = OneVsRestClassifier(clf) #ovr or ovo
@@ -233,7 +232,7 @@ def main():
     tprs_upper = np.minimum(mean_tpr + std_tpr, 1)
     tprs_lower = np.maximum(mean_tpr - std_tpr, 0)
     ax.fill_between(mean_fpr, tprs_lower, tprs_upper, color='grey', alpha=.2,
-                label=r'$\pm$ 1 std. dev.')
+                label=r'$\pm$ %0.4f auc. std.' %(std_auc))
 
     ax.set(xlim=[-0.05, 1.05], ylim=[-0.05, 1.05],
        title="Receiver operating characteristic 5 folds",xlabel ='False Positive Rate',ylabel = 'True Positive Rate')
