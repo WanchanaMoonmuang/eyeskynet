@@ -2,6 +2,8 @@
 #Import classifier here
 from sklearn.neighbors import KNeighborsClassifier #KNeighborsClassifier(n_neighbors=3)
 from sklearn.svm import SVC #SVC(kernel='linear') 'rbf'  sigmoid
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.tree import DecisionTreeClassifier
 #
 import os
 import numpy as np
@@ -37,7 +39,7 @@ F6 = 5
 TITLE = "Healthy - Glaucoma - Others"
 FILENAME = 'HGO_ds.csv' #.csv
 DIR = 'D:\Downloads\eyeskynet\Output'
-CLASSIFIER_NAME = 'Knn7'  #'SVMLinear'
+CLASSIFIER_NAME = 'DecisionTreeAda'  #'SVMLinear'
 
 
 
@@ -55,10 +57,11 @@ def main():
     X = data['data'].values #List of stringlist
     
     y = data['target'].values
-    y = label_binarize(y, classes=[0,1,2])
+    class_labels = [0,1,2]
+    y = label_binarize(y, classes=class_labels)
     n_classes = y.shape[1]
     class_names = np.array(['Healthy','Glaucoma','Others'])
-    class_labels = [0,1,2]
+    
 
     X,X_test,y,y_test = train_test_split(X,y, test_size = 0.1)
 
@@ -78,8 +81,10 @@ def main():
     except OSError :
         print("Fail to create folder")
     os.chdir(Out_folder)
-    #Classifier declare #KNeighborsClassifier(n_neighbors=3)
-    clf = KNeighborsClassifier(n_neighbors=7)#SVC(kernel='linear',probability=True) #decision_function_shape = 'ovo'
+    #Classifier declare #ada depth good 7 9 11 +13+ -15 good 16=lowstd0.75   17=bad 
+    clf = AdaBoostClassifier(DecisionTreeClassifier(max_depth=14),n_estimators=600,learning_rate=1)
+    #KNeighborsClassifier(n_neighbors=7)
+    # #SVC(kernel='linear',probability=True) #decision_function_shape = 'ovo'
 
 
     classifier = OneVsRestClassifier(clf) #ovr or ovo
@@ -139,34 +144,41 @@ def main():
         tn_o = table_list[0] + table_list[1] + table_list[3] + table_list [4]
 
         prec_h = tp_h/(tp_h+fp_h)
-        sen_h = tn_h/(tn_h+fp_h)
+        sen_h = tp_h/(tp_h+fn_h)
+        spe_h = tn_h/(tn_h+fp_h)
         acc_h = (tp_h+tn_h)/(tp_h+tn_h+fp_h+fn_h)
 
         prec_g = tp_g/(tp_g+fp_g)
-        sen_g = tn_g/(tn_g+fp_g)
+        sen_g = tp_g/(tp_g+fn_g)
+        spe_g = tn_g/(tn_g+fp_g)
         acc_g = (tp_g+tn_g)/(tp_g+tn_g+fp_g+fn_g)
 
         prec_o = tp_o/(tp_o+fp_o)
-        sen_o = tn_o/(tn_o+fp_o)
+        sen_o = tp_o/(tp_o+fn_o)
+        spe_o = tn_o/(tn_o+fp_o)
         acc_o = (tp_o+tn_o)/(tp_o+tn_o+fp_o+fn_o)
 
-        cmtable = [{'TP':tp_h,'TN' : tn_h,'FP' : fp_h,'FN' : fn_h,'pre':prec_h,'sen':sen_h,'acc' : acc_h},
-                    {'TP':tp_g,'TN' : tn_g,'FP' : fp_g,'FN' : fn_g,'pre':prec_g,'sen':sen_g,'acc' : acc_g},
-                    {'TP':tp_o,'TN' : tn_o,'FP' : fp_o,'FN' : fn_o,'pre':prec_o,'sen':sen_o,'acc' : acc_o}]
-
+        cmtable = [{'TP':tp_h,'TN' : tn_h,'FP' : fp_h,'FN' : fn_h,'pre':prec_h,'sen':sen_h,'spe':spe_h,'acc' : acc_h},
+                    {'TP':tp_g,'TN' : tn_g,'FP' : fp_g,'FN' : fn_g,'pre':prec_g,'sen':sen_g,'spe':spe_g,'acc' : acc_g},
+                    {'TP':tp_o,'TN' : tn_o,'FP' : fp_o,'FN' : fn_o,'pre':prec_o,'sen':sen_o,'spe':spe_o,'acc' : acc_o}]
+        raw_table = pd.DataFrame(cm)
+        raw_table.to_csv('rawtable_fold{}.csv'.format(fold))
         table_df = pd.DataFrame(cmtable)
         table_df.to_csv('PredictvsTrue_fold{}.csv'.format(fold))
 
         print("Precision on H :",prec_h)
         print("Sensitivity on H :",sen_h)
+        print("Specificity on H:",spe_h)
         print("Accuracy on H :",acc_h)
 
         print("Precision on G :",prec_g)
         print("Sensitivity on G :",sen_g)
+        print("Specificity on G:",spe_g)
         print("Accuracy on G :",acc_g)
 
         print("Precision on O :",prec_o)
         print("Sensitivity on O :",sen_o)
+        print("Specificity on O:",spe_o)
         print("Accuracy on O :",acc_o)
         
         joblib.dump(cmtable,CLASSIFIER_NAME+'_fold'+str(fold)+'_table'+'.pkl')
