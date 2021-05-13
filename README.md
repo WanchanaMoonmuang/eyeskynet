@@ -1,6 +1,7 @@
 # Glaucoma screening project Eyeskynet propose CN240
 # Part 1 Machine learning
 Feature extraction :
+
 1. Average RGB value => Average_bgr.py
 
 2.CDR calculation => CDR.py
@@ -13,6 +14,9 @@ Trianning Part :
 Algorithms tested DecisionTree , DecisionTree with Adaboost , KNN , SVM ,RandomForest
 
 Result : RandomForest best for our dataset and features.
+
+The most ROC & lowest STD.
+![roc_auc_allfold4](https://user-images.githubusercontent.com/60337642/118156803-fe77ba80-b443-11eb-8715-452afce21a71.jpg)
 
 Extract all feature data with => main.py
 
