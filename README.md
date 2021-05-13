@@ -13,6 +13,7 @@ Evaluate with test set with => main.py
 
 # Part 2 Deep learning
 Algorithm tested DenseNet201 , EfficientNetB3 , EfficientNetB0
+
 Result : EfficientNetB3 Most Accuracy but x3 more resources used and bigger model.
 
 ![roc_auc_fold50](https://user-images.githubusercontent.com/60337642/118156020-10a52900-b443-11eb-845c-17526daf5b42.jpg)
