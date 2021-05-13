@@ -13,13 +13,13 @@ RES = (1080,720)
 
 
 def main():
-    PATH ="D:\DataSet\DataThatWeUse+++\Others\ALLOTHERS\TRAIN"
+    PATH ="D:\DataSet\pre"
     filename = load_filename_from_folder(PATH)
     print("Loading images from : "+PATH)
     img_array = np.array(load_images_from_folder(PATH),dtype ='O')
     test_data = []
     count = 0
-    saveto ="D:\Downloads\eyeskynet\Output"
+    saveto ="D:\Downloads\eyeskynet\Outputpic"
     try :
         os.mkdir(saveto)
         print("Create OUTPUT")
@@ -35,11 +35,11 @@ def main():
         print("Processing Image No.{} : {}".format(num,filename[count]),end=" ...\n")
 
         try :
-            cdr , out_img = cal_cdr(input_img)
+            cdr ,out_img= cal_cdr(input_img)
             print("RESULT CDR :",cdr)
 
             cv.imwrite(filename[count],out_img)
-
+            
             
 
         except :
@@ -369,6 +369,8 @@ def cal_cdr (img) :
     
     img_mask = find_mask(img)
     blood_img = ex_blood(img)
+    blood_img = cv.bitwise_and(blood_img,blood_img,mask=img_mask)
+    
     nobv_img = remove_bv(img,blood_img)
     nobv_img = cv.bitwise_and(nobv_img,nobv_img,mask=img_mask)
     
@@ -426,11 +428,14 @@ def cal_cdr (img) :
     else :
         cdr = cd_r/od_r
     
+
+    #img_cd = cv.cvtColor(img_cd, cv.COLOR_GRAY2BGR)
+    #img_od = cv.cvtColor(img_od, cv.COLOR_GRAY2BGR)
     out_img = cv.circle(img, cd_center, int(cd_r), (255,0,0), 2)
     out_img = cv.circle(img, od_center, int(od_r), (0,255,0), 2)
     
     
-    return cdr,out_img
+    return cdr,out_img #blood_img to check
     
 if __name__ == "__main__":
     main()

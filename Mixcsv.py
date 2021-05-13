@@ -4,8 +4,8 @@ import os
 def main() :
     Dir = "D:\Downloads\eyeskynet\Output"
     os.chdir(Dir)
-    name1 = 'H_test.csv'
-    name2 = 'O_test.csv'
+    name1 = 'HO_ds.csv'
+    name2 = 'G_ds.csv'
     mix_data2(name1,name2)
 
 

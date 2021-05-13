@@ -5,21 +5,34 @@ import cv2 as cv
 import csv
 #Normalize contrast by apply CLAHE
 clahe = cv.createCLAHE(clipLimit=3, tileGridSize=(10,10))
+RES = (1080,720)
 
 def main () :
-    PATH ="D:\DataSet\DataThatWeUse+++\Others\ALLSOURCE"
+    PATH ="D:\DataSet\pre"
     filename = load_filename_from_folder(PATH)
     print("Loading images from PATH")
     img_array = np.array(load_images_from_folder(PATH),dtype ='O')
     test_data = [["file name","most_f_b","most_f_g","most_f_r"]]
     count = 0
-    saveto ="D:\Downloads\eyeskynet\Outputf"
+    saveto ="D:\Downloads\eyeskynet\Outputpic"
     os.chdir(saveto)
 
     for input_img in img_array :
+        input_img = cv.resize(input_img,RES,interpolation = cv.INTER_AREA)
         img_b,img_g,img_r = normalize_bgr(input_img)
         hist_b,hist_g,hist_r = cal_hist(img_b,img_g,img_r)
-
+        plt.figure()
+        plt.plot(hist_b)
+        plt.savefig("hist_b"+filename[count])
+        plt.close()
+        plt.figure()
+        plt.plot(hist_g)
+        plt.savefig("hist_g"+filename[count])
+        plt.close()
+        plt.figure()
+        plt.plot(hist_r)
+        plt.savefig("hist_r"+filename[count])
+        plt.close()
         mostf_b = np.argmax(hist_b)
         mostf_g = np.argmax(hist_g)
         mostf_r = np.argmax(hist_r)
@@ -28,6 +41,14 @@ def main () :
         test_data.append(data_format)
         count+=1
     write_csv("Dataf_Others.csv",test_data)
+
+
+
+
+def find_mask(img) :
+    gray = cv.cvtColor(img,cv.COLOR_BGR2GRAY)
+    ret,mask =cv.threshold(gray,10,255,cv.THRESH_BINARY)
+    return mask
 def most_f(in_img) :
     img_b,img_g,img_r = normalize_bgr(in_img)
     hist_b,hist_g,hist_r = cal_hist(img_b,img_g,img_r)
