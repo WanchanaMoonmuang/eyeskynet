@@ -20,7 +20,7 @@ from sklearn.metrics import classification_report
 import ast
 
 #ex_data(PATH) ex_data('D:\eyeskynetdata\glaucoma')
-#low_std fold2
+
 CLASSIFIER_NAME = "Randomforest"
 def main() :
     MODELPATH = 'D:\Downloads\eyeskynet\Output\ModelRandomForestFinal'

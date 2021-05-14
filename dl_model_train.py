@@ -15,9 +15,9 @@ img_height = RES[1]
 img_width = RES[0]
 class_names = ['healthy', 'glaucoma', 'others']
 num_classes = len(class_names)
-batch_size = 16 # b0 use 32 else 16
-CLASSIFIER_NAME = 'B0augmentedzoom30_'
-epochs = 30
+batch_size = 16 # b0 use 32 b3 16
+CLASSIFIER_NAME = 'B0augmentedzoom60_'
+epochs = 60
 
 def main() :
     PATH ="D:\Downloads\Output/DL_wzoom"

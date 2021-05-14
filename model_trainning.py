@@ -4,6 +4,7 @@ from sklearn.neighbors import KNeighborsClassifier #KNeighborsClassifier(n_neigh
 from sklearn.svm import SVC #SVC(kernel='linear') 'rbf'  sigmoid
 from sklearn.ensemble import AdaBoostClassifier
 from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
 #
 import os
 import numpy as np
@@ -39,7 +40,7 @@ F6 = 5
 TITLE = "Healthy - Glaucoma - Others"
 FILENAME = 'HGO_ds.csv' #.csv
 DIR = 'D:\Downloads\eyeskynet\Output'
-CLASSIFIER_NAME = 'DecisionTreeAda'  #'SVMLinear'
+CLASSIFIER_NAME = 'RandomForest'  #'SVMLinear'
 
 
 
@@ -82,8 +83,8 @@ def main():
         print("Fail to create folder")
     os.chdir(Out_folder)
     #Classifier declare #ada depth good 7 9 11 +13+ -15 good 16=lowstd0.75   17=bad 
-    clf = AdaBoostClassifier(DecisionTreeClassifier(max_depth=14),n_estimators=600,learning_rate=1)
-    #KNeighborsClassifier(n_neighbors=7)
+    clf = RandomForestClassifier(n_estimators=120,max_depth=16, random_state=0)   #AdaBoostClassifier(DecisionTreeClassifier(max_depth=14),n_estimators=600,learning_rate=1)
+    #KNeighborsClassifier(n_neighbors=7) #RandomForestClassifier(max_depth=2, random_state=0)
     # #SVC(kernel='linear',probability=True) #decision_function_shape = 'ovo'
 
 
