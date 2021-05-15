@@ -15,13 +15,13 @@ from dl_imgprepro import prepro
 from dl_eval import create_model_B0
 from dl_eval import create_model_B3
 
-CTEST = 'ML'
+CTEST = 'DL'
 
-DL_PATH = 'D:\Downloads\Output\DL_model\ModelB0augmentedzoom30_151929\model/f2/cp-0029.ckpt' #'D:\Downloads\Output\Deeplearning_model\ModelEnetB3augmentedfix60_172511\model/f1'
+DL_PATH = 'D:\Downloads\Output\DL_model\ModelB0augmentedzoom30_151929\model/f2/cp-0029.ckpt'#'D:\Downloads\Output\Deeplearning_model\ModelEnetB3augmentedfix60_172511\model/f1'
 ML_PATH = 'D:\Downloads\Output\ML_Output\ModelRandomForestFinal/RandomForest_fold4.pkl'
 class_names = ["normal", "glaucoma", "other"]
 sq = 224
-RES = (224,224)
+RES = (sq,sq)
 ml_model = joblib.load(ML_PATH)
 dl_model = create_model_B0()
 dl_model.load_weights(DL_PATH)

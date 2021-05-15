@@ -13,19 +13,19 @@ from sklearn.metrics import roc_curve
 #raw input is 1080,720
 #B3 input should 300,300 dense 224
 sq = 224
-input_shape = (sq,sq,3)
+
 RES = (sq,sq)
 batch_size = 1 #32
 #f2_78 = 82.7%
-fold = 29 #dense36 b3e50 b0 f2/29
+fold = 30 #dense36 b3e50 b0 f2/29
 class_names = ['healthy', 'glaucoma', 'others']
 
 def main() :
-    PATH = "D:\Downloads\Output\DL_model_eval/B0f2epoch29"
+    PATH = "D:\Downloads\Output\DL_model_eval/"
     test_PATH =  "D:\Downloads\Output\DL_wzoom_test" #'D:\Downloads\Output\DLTEST'
     
-    os.chdir(PATH) #D:\Downloads\Output\DL_model\ModelB3augmentedzoom60_000247\model\f1
-    model_PATH = 'D:\Downloads\Output\DL_model\ModelB0augmentedzoom30_151929\model/f2'#'D:\Downloads\Output\Deeplearning_model\ModelEnetB3augmentedfix60_172511\model/f1'
+    os.chdir(PATH) #'D:\Downloads\Output\DL_model\ModelB0augmentedzoom30_151929\model/f2' # We use
+    model_PATH = 'D:\Downloads\Output\DL_model\ModelB0augmentedzoom60Night_235234\model/f2'#'D:\Downloads\Output\Deeplearning_model\ModelEnetB3augmentedfix60_172511\model/f1'
     test_ds = tf.keras.preprocessing.image_dataset_from_directory(
          test_PATH,shuffle=False,
          image_size= RES,labels='inferred',label_mode='int',
@@ -201,7 +201,7 @@ def main() :
         
 def create_model_B3():
     model = tf.keras.Sequential([
-        tf.keras.layers.experimental.preprocessing.Rescaling(1./255,input_shape=input_shape),
+        tf.keras.layers.experimental.preprocessing.Rescaling(1./255,input_shape=(300,300,3)),
         tf.keras.applications.EfficientNetB3(
         include_top=True, weights= None, input_tensor=None,
         pooling=None, classes=len(class_names),
@@ -219,7 +219,7 @@ def create_model_B3():
 
 def create_model_B0():
     model = tf.keras.Sequential([
-        tf.keras.layers.experimental.preprocessing.Rescaling(1./255,input_shape=input_shape),
+        tf.keras.layers.experimental.preprocessing.Rescaling(1./255,input_shape=(224,224,3)),
         tf.keras.applications.EfficientNetB0(
         include_top=True, weights= None, input_tensor=None,
         pooling=None, classes=len(class_names),
