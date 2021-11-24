@@ -4,11 +4,11 @@ Feature extraction :
 
 1. Average RGB value => Average_bgr.py
 
-2.CDR calculation => CDR.py
+2. CDR calculation => CDR.py
 
-3.Number of blood pixels => CDR.py @function ex_blood
+3. Number of blood pixels => CDR.py @function ex_blood
 
-4.Most frequent intensity of RGB => freq_hist.py , mostf.py
+4. Most frequent intensity of RGB => freq_hist.py , mostf.py
 
 Trianning Part :
 Algorithms tested DecisionTree , DecisionTree with Adaboost , KNN , SVM ,RandomForest
@@ -37,12 +37,14 @@ We use EfficientNetB0 with Augmented data result in light weight model.
 
 ![roc_auc_fold29](https://user-images.githubusercontent.com/60337642/118155930-f703e180-b442-11eb-8f9d-7d073ae8cf80.jpg)
 
-1.Preprocessing images ROI => dl_imgprepro.py
+Steps to create a model.
 
-2.Augmentation generate zoom images => generate_zoom.py
+1. Preprocessing images ROI => dl_imgprepro.py
 
-3.Train model with Tensorflow => dl_model_train.py
+2. Augmentation generate zoom images => generate_zoom.py
 
-4.Evaluate model with => dl_eval.py
+3. Train model with Tensorflow => dl_model_train.py
+
+4. Evaluate model with => dl_eval.py
 
 *dl_load_train.py to further more trainning
